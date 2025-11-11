@@ -1,0 +1,81 @@
+#include <iostream>
+using namespace std;
+
+struct Node {
+    int data;
+    Node *left, *right;
+    Node(int val) : data(val), left(NULL), right(NULL) {}
+};
+
+// Insert in BST
+Node* insert(Node* root, int val) {
+    if (!root) return new Node(val);
+    if (val < root->data)
+        root->left = insert(root->left, val);
+    else if (val > root->data)
+        root->right = insert(root->right, val);
+    return root;
+}
+
+// (a) Search (Recursive)
+bool searchRecursive(Node* root, int key) {
+    if (!root) return false;
+    if (root->data == key) return true;
+    if (key < root->data) return searchRecursive(root->left, key);
+    return searchRecursive(root->right, key);
+}
+
+// (a) Search (Non-Recursive)
+bool searchIterative(Node* root, int key) {
+    while (root) {
+        if (root->data == key) return true;
+        root = (key < root->data) ? root->left : root->right;
+    }
+    return false;
+}
+
+// (b) Maximum
+Node* findMax(Node* root) {
+    if (!root) return NULL;
+    while (root->right)
+        root = root->right;
+    return root;
+}
+
+// (c) Minimum
+Node* findMin(Node* root) {
+    if (!root) return NULL;
+    while (root->left)
+        root = root->left;
+    return root;
+}
+
+// (d) Inorder Successor
+Node* inorderSuccessor(Node* root, Node* node) {
+    if (node->right) return findMin(node->right);
+    Node* succ = NULL;
+    while (root) {
+        if (node->data < root->data) {
+            succ = root;
+            root = root->left;
+        } else if (node->data > root->data)
+            root = root->right;
+        else break;
+    }
+    return succ;
+}
+
+// (e) Inorder Predecessor
+Node* inorderPredecessor(Node* root, Node* node) {
+    if (node->left) return findMax(node->left);
+    Node* pred = NULL;
+    while (root) {
+        if (node->data > root->data) {
+            pred = root;
+            root = root->right;
+        } else if (node->data < root->data)
+            root = root->left;
+        else break;
+    }
+    return pred;
+}
